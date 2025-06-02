@@ -13,7 +13,8 @@ const AddOrder = () => {
     const [colorCode, setColorCode] = useState("");
 
     // ✅ Generate Transaction ID (YYYYMMDD + 4 digits)
-    const generateTransactionID = (input) => {
+    const generateTransactionID = (input) => 
+        {
         const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD format
         return `${currentDate}-${input.padStart(4, "0")}`;
     };
