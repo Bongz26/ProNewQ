@@ -4,6 +4,8 @@ import "./styles/queueStyles.css"; // ✅ Ensure this file exists
 import { calculateETC } from "./utils/calculateETC"; 
 import { sendWhatsAppNotification } from "./utils/sendWhatsAppNotification"; 
 
+const BASE_URL = "https://newqueue-production.up.railway.app"; // ✅ Updated Railway Base URL
+
 const Dashboard = () => {
     const [orders, setOrders] = useState([]);
     const [activeOrdersCount, setActiveOrdersCount] = useState(0); 
@@ -12,16 +14,16 @@ const Dashboard = () => {
    const fetchOrders = useCallback(async () => {
     try {
         console.log("🔄 Fetching orders from API...");
-        const response = await axios.get("https://queue-backendser.onrender.com/api/orders");
-        console.log("✅ Full API Orders Data:", JSON.stringify(response.data, null, 2)); // Debugging API response
+        const response = await axios.get(`${BASE_URL}/api/orders`); // ✅ Updated Railway API URL
+        console.log("✅ Full API Orders Data:", JSON.stringify(response.data, null, 2));
 
         const updatedOrders = response.data.map(order => ({
             ...order,
             dynamicETC: calculateETC(order.category, activeOrdersCount) || "N/A"
         }));
 
-        setOrders(updatedOrders); // ✅ Directly set orders in state
-        console.log("✅ Orders have been set in React state:", updatedOrders); // Debugging state after update
+        setOrders(updatedOrders);
+        console.log("✅ Orders have been set in React state:", updatedOrders);
     } catch (error) {
         console.error("🚨 Error fetching orders:", error);
     }
@@ -31,7 +33,7 @@ const Dashboard = () => {
     const fetchActiveOrdersCount = async () => {
         try {
             console.log("🔍 Fetching active orders count...");
-            const response = await axios.get("https://queue-backendser.onrender.com/api/active-orders-count", { timeout: 10000 });
+            const response = await axios.get(`${BASE_URL}/api/active-orders-count`, { timeout: 10000 }); // ✅ Updated Railway API URL
             setActiveOrdersCount(response.data.activeOrders);
             console.log("✅ Active orders count:", response.data.activeOrders);
         } catch (error) {
@@ -48,7 +50,7 @@ const Dashboard = () => {
     const updateStatus = async (orderId, newStatus, clientNumber) => {
         console.log(`🛠 Updating order ${orderId} to ${newStatus}`);
         try {
-            await axios.put(`https://queue-backendser.onrender.com/api/orders/${orderId}`, { current_status: newStatus });
+            await axios.put(`${BASE_URL}/api/orders/${orderId}`, { current_status: newStatus }); // ✅ Updated Railway API URL
             console.log("✅ Order updated successfully!");
             fetchOrders();
 
@@ -61,11 +63,10 @@ const Dashboard = () => {
     };
 
     console.log("🛠 Orders State in React CC:", orders.map(order => ({
-    
         id: order.id,
-    transaction_id: order.transaction_id,
-    colour_code: order.colour_code || "Missing"
-})));
+        transaction_id: order.transaction_id,
+        colour_code: order.colour_code || "Missing"
+    })));
 
     return (
         <div className="container mt-4">
