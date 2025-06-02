@@ -34,7 +34,7 @@ const AddOrder = () => {
                 return;
             }
 
-            console.log("✅ Order added successfully:", response.data);
+            console.log("✅ Order added_ successfully:", response.data);
         } catch (error) {
             console.error("🚨 Error adding order:", error.message);
         }
